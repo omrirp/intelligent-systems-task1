@@ -11,7 +11,7 @@ def dfs(matrix, size, i=0, j=0, pathToReturn=set([Node('S',0,0,0)]), visited=set
 
     # down,right operator
     try:
-        if( matrix[i+1][j+1]!='X' and matrix[i][j+1]!='X' and matrix[i+1][j]!='X' and i < size-1 and j < size-1  and (i+1,j+1) not in visited):
+        if( matrix[i+1][j+1]!='X' and matrix[i][j+1]!='X' and matrix[i+1][j]!='X' and i < size-1 and j < size-1 and (i+1,j+1) not in visited):
             currentNode = [node for node in pathToReturn if node.i == i and node.j == j]
             nextNode = [node for node in pathToReturn if node.i == i+1 and node.j == j+1]
             if(not nextNode):
@@ -29,7 +29,7 @@ def dfs(matrix, size, i=0, j=0, pathToReturn=set([Node('S',0,0,0)]), visited=set
         {}
     # down,left operator
     try:
-        if(matrix[i+1][j-1] != 'X' and matrix[i+1][j] != 'X' and matrix[i][j-1] != 'X' and i < size and j > 0 and (i+1,j-1) not in visited):
+        if(matrix[i+1][j-1] != 'X' and matrix[i+1][j] != 'X' and matrix[i][j-1] != 'X' and i < size-1 and j > 0 and (i+1,j-1) not in visited):
             currentNode = [node for node in pathToReturn if node.i == i and node.j == j]
             nextNode = [node for node in pathToReturn if node.i == i+1 and node.j == j-1]
             if(not nextNode):
@@ -47,7 +47,7 @@ def dfs(matrix, size, i=0, j=0, pathToReturn=set([Node('S',0,0,0)]), visited=set
         {}
     # up,right operator
     try:
-        if(matrix[i-1][j+1] != 'X' and matrix[i-1][j] != 'X' and matrix[i][j+1] != 'X' and i > 0 & j < size and (i-1,j+1) not in visited):
+        if(matrix[i-1][j+1] != 'X' and matrix[i-1][j] != 'X' and matrix[i][j+1] != 'X' and i > 0 & j < size-1 and (i-1,j+1) not in visited):
             currentNode = [node for node in pathToReturn if node.i == i and node.j == j]
             nextNode = [node for node in pathToReturn if node.i == i-1 and node.j == j+1]
             if(not nextNode):
