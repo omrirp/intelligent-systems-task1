@@ -1,29 +1,86 @@
 from Node import Node
 import networkx as nx
 
+def discard(nodes, i, j):
+    for node in nodes:
+        if node.i == i and node.j == j:
+            nodes.discard(node)
+            break
+
 def dfs(matrix, size, i=0, j=0, pathToReturn=set([Node('S',0,0,0)]), visited=set([(0,0)])):
 
-    # right,down operator
-    # if( matrix[i+1][j+1]!='X' and matrix[i][j+1]!='X' and matrix[i+1][j]!='X' and i < size-1 and j < size-1  and (i,j) not in visited):
-    #     currentNode = [node for node in pathToReturn if node.i == i and node.j == j]
-    #     nextNode = [node for node in pathToReturn if node.i == i+1 and node.j == j+1]
-    #     if(not nextNode):
-    #         nextNode = Node(matrix[i+1][j+1], i+1, j+1, currentNode.distance+1, currentNode)
-    #     if(nextNode.distance > currentNode.distance+1):
-    #         nextNode.parent = currentNode
-    #     visited.add((i,j))
-    #     visited.add((i+1,j+1))
-    #     pathToReturn.add(nextNode)
-    #     dfs(matrix,size,i+1,j+1,pathToReturn,visited)
-    # right,up operator
-    #elif(matrix[i+1][j-1] == 'R' and i < size and j > 0 and (i,j) not in visited):
-
-    # left,down operator
-    #elif(matrix[i-1][j+1] == 'R' and i > 0 & j < size and (i,j) not in visited):
-
+    # down,right operator
+    try:
+        if( matrix[i+1][j+1]!='X' and matrix[i][j+1]!='X' and matrix[i+1][j]!='X' and i < size-1 and j < size-1  and (i+1,j+1) not in visited):
+            currentNode = [node for node in pathToReturn if node.i == i and node.j == j]
+            nextNode = [node for node in pathToReturn if node.i == i+1 and node.j == j+1]
+            if(not nextNode):
+                nextNode = Node(matrix[i+1][j+1], i+1, j+1, currentNode[0].distance+1, currentNode[0])
+            else:
+                nextNode = nextNode[0]
+            if(nextNode.distance > currentNode[0].distance+1):
+                discard(pathToReturn, i+1, j+1)
+                nextNode.parent = currentNode
+                pathToReturn.add(nextNode)
+            visited.add((i+1,j+1))
+            pathToReturn.add(nextNode)
+            dfs(matrix,size,i+1,j+1,pathToReturn,visited)
+    except:
+        {}
+    # down,left operator
+    try:
+        if(matrix[i+1][j-1] != 'X' and matrix[i+1][j] != 'X' and matrix[i][j-1] != 'X' and i < size and j > 0 and (i+1,j-1) not in visited):
+            currentNode = [node for node in pathToReturn if node.i == i and node.j == j]
+            nextNode = [node for node in pathToReturn if node.i == i+1 and node.j == j-1]
+            if(not nextNode):
+                nextNode = Node(matrix[i+1][j+1], i+1, j-1, currentNode[0].distance+1, currentNode[0])
+            else:
+                nextNode = nextNode[0]
+            if(nextNode.distance > currentNode[0].distance+1):
+                discard(pathToReturn, i+1, j-1)
+                nextNode.parent = currentNode
+                pathToReturn.add(nextNode)
+            visited.add((i+1,j-1))
+            pathToReturn.add(nextNode)
+            dfs(matrix,size,i+1,j-1,pathToReturn,visited)   
+    except:
+        {}
+    # up,right operator
+    try:
+        if(matrix[i-1][j+1] != 'X' and matrix[i-1][j] != 'X' and matrix[i][j+1] != 'X' and i > 0 & j < size and (i-1,j+1) not in visited):
+            currentNode = [node for node in pathToReturn if node.i == i and node.j == j]
+            nextNode = [node for node in pathToReturn if node.i == i-1 and node.j == j+1]
+            if(not nextNode):
+                nextNode = Node(matrix[i-1][j+1], i-1, j+1, currentNode[0].distance+1, currentNode[0])
+            else:
+                nextNode = nextNode[0]
+            if(nextNode.distance > currentNode[0].distance+1):
+                discard(pathToReturn, i-1, j+1)
+                nextNode.parent = currentNode
+                pathToReturn.add(nextNode)
+            visited.add((i-1,j+1))
+            pathToReturn.add(nextNode)
+            dfs(matrix,size,i-1,j+1,pathToReturn,visited)
+    except:
+        {}
     # left,up operator
-    #elif(matrix[i-1][j-1] == 'R' and j > 0 & i > 0 and (i,j) not in visited):
-
+    try:
+        if(matrix[i-1][j-1] != 'X' and matrix[i-1][j] != 'X' and matrix[i][j-1] != 'X' and j > 0 & i > 0 and (i-1,j-1) not in visited):
+            currentNode = [node for node in pathToReturn if node.i == i and node.j == j]
+            nextNode = [node for node in pathToReturn if node.i == i-1 and node.j == j-1]
+            if(not nextNode):
+                nextNode = Node(matrix[i-1][j-1], i-1, j-1, currentNode[0].distance+1, currentNode[0])
+            else:
+                nextNode = nextNode[0]
+            if(nextNode.distance > currentNode[0].distance+1):
+                discard(pathToReturn, i-1, j-1)
+                nextNode.parent = currentNode
+                pathToReturn.add(nextNode)
+            visited.add((i-1,j-1))
+            pathToReturn.add(nextNode)
+            dfs(matrix,size,i-1,j-1,pathToReturn,visited)
+    except:
+        {}
     # right operato
     try:
         if(matrix[i][j+1] != 'X' and j < size-1 and (i,j+1) not in visited):
@@ -31,8 +88,12 @@ def dfs(matrix, size, i=0, j=0, pathToReturn=set([Node('S',0,0,0)]), visited=set
             nextNode = [node for node in pathToReturn if node.i == i and node.j == j+1]
             if(not nextNode):
                 nextNode = Node(matrix[i][j+1], i, j+1, currentNode[0].distance +2, currentNode[0])
+            else:
+                nextNode = nextNode[0]
             if(nextNode.distance > currentNode[0].distance+2):
+                discard(pathToReturn, i, j+1)
                 nextNode.parent = currentNode[0]
+                pathToReturn.add(nextNode)
             visited.add((i,j+1))
             pathToReturn.add(nextNode)
             dfs(matrix, size, i, j+1, pathToReturn, visited)
@@ -45,7 +106,10 @@ def dfs(matrix, size, i=0, j=0, pathToReturn=set([Node('S',0,0,0)]), visited=set
             nextNode = [node for node in pathToReturn if node.i == i and node.j == j-1]
             if(not nextNode):
                 nextNode = Node(matrix[i][j-1], i, j-1, currentNode[0].distance +2, currentNode[0])
+            else:
+                nextNode = nextNode[0]
             if(nextNode.distance > currentNode[0].distance+2):
+                discard(pathToReturn, i, j-1)
                 nextNode.parent = currentNode[0]
             visited.add((i,j-1))
             pathToReturn.add(nextNode)
@@ -59,7 +123,10 @@ def dfs(matrix, size, i=0, j=0, pathToReturn=set([Node('S',0,0,0)]), visited=set
             nextNode = [node for node in pathToReturn if node.i == i+1 and node.j == j]
             if(not nextNode):
                 nextNode = Node(matrix[i+1][j], i+1, j, currentNode[0].distance +2, currentNode[0])
+            else:
+                nextNode = nextNode[0]
             if(nextNode.distance > currentNode[0].distance+2):
+                discard(pathToReturn, i+1, j)
                 nextNode.parent = currentNode[0]
             visited.add((i+1,j))
             pathToReturn.add(nextNode)
@@ -73,7 +140,10 @@ def dfs(matrix, size, i=0, j=0, pathToReturn=set([Node('S',0,0,0)]), visited=set
             nextNode = [node for node in pathToReturn if node.i == i-1 and node.j == j]
             if(not nextNode):
                 nextNode = Node(matrix[i][j+1], i-1, j, currentNode[0].distance +2, currentNode[0])
+            else:
+                nextNode = nextNode[0]
             if(nextNode.distance > currentNode[0].distance+2):
+                discard(pathToReturn, i-1, j)
                 nextNode.parent = currentNode[0]
             visited.add((i-1,j))
             pathToReturn.add(nextNode)
