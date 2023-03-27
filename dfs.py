@@ -1,7 +1,7 @@
 from Node import Node
 import networkx as nx
 
-def discard(nodes, i, j):
+def discardNode(nodes, i, j):
     for node in nodes:
         if node.i == i and node.j == j:
             nodes.discard(node)
@@ -17,9 +17,8 @@ def dfs(matrix, size, i=0, j=0, currentNode=Node('S',0,0,0), pathToReturn=set([N
             else:
                 nextNode = nextNode[0]
             if(nextNode.distance > currentNode.distance+1):
-                discard(pathToReturn, i+1, j+1)
+                discardNode(pathToReturn, i+1, j+1)
                 nextNode.parent = currentNode
-                pathToReturn.add(nextNode)
             visited.add((i+1,j+1))
             pathToReturn.add(nextNode)
             dfs(matrix,size,i+1,j+1,nextNode,pathToReturn,visited)
@@ -34,9 +33,8 @@ def dfs(matrix, size, i=0, j=0, currentNode=Node('S',0,0,0), pathToReturn=set([N
             else:
                 nextNode = nextNode[0]
             if(nextNode.distance > currentNode.distance+1):
-                discard(pathToReturn, i+1, j-1)
+                discardNode(pathToReturn, i+1, j-1)
                 nextNode.parent = currentNode
-                pathToReturn.add(nextNode)
             visited.add((i+1,j-1))
             pathToReturn.add(nextNode)
             dfs(matrix,size,i+1,j-1,nextNode,pathToReturn,visited)   
@@ -51,9 +49,8 @@ def dfs(matrix, size, i=0, j=0, currentNode=Node('S',0,0,0), pathToReturn=set([N
             else:
                 nextNode = nextNode[0]
             if(nextNode.distance > currentNode.distance+1):
-                discard(pathToReturn, i-1, j+1)
+                discardNode(pathToReturn, i-1, j+1)
                 nextNode.parent = currentNode
-                pathToReturn.add(nextNode)
             visited.add((i-1,j+1))
             pathToReturn.add(nextNode)
             dfs(matrix,size,i-1,j+1,nextNode,pathToReturn,visited)
@@ -68,9 +65,8 @@ def dfs(matrix, size, i=0, j=0, currentNode=Node('S',0,0,0), pathToReturn=set([N
             else:
                 nextNode = nextNode[0]
             if(nextNode.distance > currentNode.distance+1):
-                discard(pathToReturn, i-1, j-1)
+                discardNode(pathToReturn, i-1, j-1)
                 nextNode.parent = currentNode
-                pathToReturn.add(nextNode)
             visited.add((i-1,j-1))
             pathToReturn.add(nextNode)
             dfs(matrix,size,i-1,j-1,nextNode,pathToReturn,visited)
@@ -85,9 +81,8 @@ def dfs(matrix, size, i=0, j=0, currentNode=Node('S',0,0,0), pathToReturn=set([N
             else:
                 nextNode = nextNode[0]
             if(nextNode.distance > currentNode.distance+2):
-                discard(pathToReturn, i, j+1)
+                discardNode(pathToReturn, i, j+1)
                 nextNode.parent = currentNode
-                pathToReturn.add(nextNode)
             visited.add((i,j+1))
             pathToReturn.add(nextNode)
             dfs(matrix,size,i,j+1,nextNode,pathToReturn,visited)
@@ -102,7 +97,7 @@ def dfs(matrix, size, i=0, j=0, currentNode=Node('S',0,0,0), pathToReturn=set([N
             else:
                 nextNode = nextNode[0]
             if(nextNode.distance > currentNode.distance+2):
-                discard(pathToReturn, i, j-1)
+                discardNode(pathToReturn, i, j-1)
                 nextNode.parent = currentNode
             visited.add((i,j-1))
             pathToReturn.add(nextNode)
@@ -118,7 +113,7 @@ def dfs(matrix, size, i=0, j=0, currentNode=Node('S',0,0,0), pathToReturn=set([N
             else:
                 nextNode = nextNode[0]
             if(nextNode.distance > currentNode.distance+2):
-                discard(pathToReturn, i+1, j)
+                discardNode(pathToReturn, i+1, j)
                 nextNode.parent = currentNode
             visited.add((i+1,j))
             pathToReturn.add(nextNode)
@@ -134,7 +129,7 @@ def dfs(matrix, size, i=0, j=0, currentNode=Node('S',0,0,0), pathToReturn=set([N
             else:
                 nextNode = nextNode[0]
             if(nextNode.distance > currentNode.distance+2):
-                discard(pathToReturn, i-1, j)
+                discardNode(pathToReturn, i-1, j)
                 nextNode.parent = currentNode
             visited.add((i-1,j))
             pathToReturn.add(nextNode)
