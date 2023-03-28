@@ -152,7 +152,20 @@ def main():
         # read the rest of the lines and append each row as a list to the matrix
         for line in file:
             matrix.append(list(line.strip()))
-    print(dfs(matrix,size))
+    
+    nodes, visited = dfs(matrix,size)
+    goalNode = [node for node in nodes if node.cell == 'G']
+    goalNode = goalNode[0]
+
+    path = ''
+
+    while(goalNode != None):
+        path = ' => ' + '(' + str(goalNode.i) + ',' + str(goalNode.j) + ')' + path
+        goalNode = goalNode.parent
+
+
+    print(path)
+    
 
 main()
 
