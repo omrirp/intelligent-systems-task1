@@ -29,6 +29,11 @@ def gbfs(matrix, size):
                 currentNode = node
                 closestDistance = distance
 
+        # move the current node from open to closed
+        moveNode(open, closed, i, j)
+        i = currentNode.i
+        j = currentNode.j
+
         # down,right operator
         try:
             if( matrix[i+1][j+1]!='X' and matrix[i][j+1]!='X' and matrix[i+1][j]!='X' and i < size-1 and j < size-1 and (i+1,j+1) not in visited):
@@ -47,7 +52,7 @@ def gbfs(matrix, size):
         try:
             if(matrix[i-1][j+1] != 'X' and matrix[i-1][j] != 'X' and matrix[i][j+1] != 'X' and i > 0 & j < size-1 and (i-1,j+1) not in visited):
                 open.append(Node(matrix[i-1][j+1], i-1, j+1, currentNode.distance+1, currentNode))
-                visited.add((i-1,j-1))
+                visited.add((i-1,j+1))
         except:
             {}
          # left,up operator
@@ -85,10 +90,6 @@ def gbfs(matrix, size):
                 visited.add((i-1,j))
         except:
             {}
-        # move the current node from open to closed
-        moveNode(open, closed, i, j)
-        i = currentNode.i
-        j = currentNode.j
     # end of while loop
     return closed, visited 
 
