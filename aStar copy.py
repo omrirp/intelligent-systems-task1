@@ -7,7 +7,7 @@ def moveNode(open, closed, i, j):
     for node in open:
         if node.i == i and node.j == j:
             open.remove(node)
-            closed.add(node)
+            closed.append(node)
             break
 
 def discardNode(nodes, i, j):
@@ -16,111 +16,89 @@ def discardNode(nodes, i, j):
             nodes.discard(node)
             break
 
-def gbfs(matrix, size):
-    open = set([Node('S',0,0,0)])
-    closed = set()
+def aStarMove(matrix, size, open, closed, currentNode, visited, i, j, distanceToAdd):
+    nextNode = [node for node in closed if node.i == i and node.j == j]
+    if(not nextNode):
+        nextNode = Node(matrix[i][j], i, j, currentNode.distance+distanceToAdd, currentNode)
+    else:
+        nextNode = nextNode[0]
+    if(nextNode.distance + manhattanDistance(nextNode.i,nextNode.j,size-1,size-1) > currentNode.distance+1+manhattanDistance(currentNode.i,currentNode.j,size-1,size-1)):
+        discardNode(open, i, j)
+        nextNode.parent = currentNode
+    open.append(nextNode)
+    visited.add((i,j))
+    return
+
+def aStar(matrix, size):
+    open = list([Node('S',0,0,0)])
+    closed = list()
     visited = set([(0,0)])
-    i = 0
-    j = 0
-    goalCordinates = (size-1,size-1)
     
     while(len(open) != 0):
         
-        # find the Node with the closest manhattan distance to the goal
+        # find the Node with the minimum value of total distance from the start
+        # pluse the  heuristic value as manhattan distance
         currentNode = None
         closestDistance = float('inf')
         for node in open:
-            distance = manhattanDistance(node.i, node.j, goalCordinates[0], goalCordinates[1])
+            manDistance = manhattanDistance(node.i, node.j, size-1, size-1)
+            distance =  manDistance + node.distance
             if distance < closestDistance:
                 currentNode = node
                 closestDistance = distance
-
         i = currentNode.i
         j = currentNode.j
 
         # down,right operator
         try:
             if( matrix[i+1][j+1]!='X' and matrix[i][j+1]!='X' and matrix[i+1][j]!='X' and i < size-1 and j < size-1 and (i+1,j+1) not in visited):
-                n = [node for node in open if node.i == i+1 and node.j == j+1]
-                if(len(n) > 0):
-                    discardNode(closed, i+1, j+1)
-                open.add(Node(matrix[i+1][j+1], i+1, j+1, currentNode.distance+1, currentNode))
-                visited.add((i+1,j+1))
+                aStarMove(matrix,size,open,closed,currentNode,visited,i+1,j+1,1)
         except:
             {}
          # down,left operator
         try:
             if(matrix[i+1][j-1] != 'X' and matrix[i+1][j] != 'X' and matrix[i][j-1] != 'X' and i < size-1 and j > 0 and (i+1,j-1) not in visited):
-                n = [node for node in open if node.i == i+1 and node.j == j-1]
-                if(len(n) > 0):
-                    discardNode(closed, i+1, j-1)
-                open.add(Node(matrix[i+1][j-1], i+1, j-1, currentNode.distance+1, currentNode))
-                visited.add((i+1,j-1))
+                aStarMove(matrix,size,open,closed,currentNode,visited,i+1,j-1,1)
         except:
             {}
         # up,right operator
         try:
             if(matrix[i-1][j+1] != 'X' and matrix[i-1][j] != 'X' and matrix[i][j+1] != 'X' and i > 0 & j < size-1 and (i-1,j+1) not in visited):
-                n = [node for node in open if node.i == i-1 and node.j == j+1]
-                if(len(n) > 0):
-                    discardNode(closed, i-1, j+1)
-                open.add(Node(matrix[i-1][j+1], i-1, j+1, currentNode.distance+1, currentNode))
-                visited.add((i-1,j+1))
+                aStarMove(matrix,size,open,closed,currentNode,visited,i-1,j+1,1)
         except:
             {}
          # left,up operator
         try:
             if(matrix[i-1][j-1] != 'X' and matrix[i-1][j] != 'X' and matrix[i][j-1] != 'X' and j > 0 & i > 0 and (i-1,j-1) not in visited):
-                n = [node for node in open if node.i == i-1 and node.j == j-1]
-                if(len(n) > 0):
-                    discardNode(closed, i-1, j-1)
-                open.add(Node(matrix[i-1][j-1], i-1, j-1, currentNode.distance+1, currentNode))
-                visited.add((i-1,j-1))
+                aStarMove(matrix,size,open,closed,currentNode,visited,i-1,j-1,1)
         except:
             {}
         # right operator
         try:
             if(matrix[i][j+1] != 'X' and j < size-1 and (i,j+1) not in visited):
-                n = [node for node in open if node.i == i and node.j == j+1]
-                if(len(n) > 0):
-                    discardNode(closed, i, j+1)
-                open.add(Node(matrix[i][j+1], i, j+1, currentNode.distance+2, currentNode))
-                visited.add((i,j+1))
+                aStarMove(matrix,size,open,closed,currentNode,visited,i,j+1,2)
         except:
             {}    
         # left operator
         try:
             if(matrix[i][j-1] != 'X' and j > 0 and (i,j-1) not in visited):
-                n = [node for node in open if node.i == i and node.j == j-1]
-                if(len(n) > 0):
-                    discardNode(closed, i, j-1)
-                open.add(Node(matrix[i][j-1], i, j-1, currentNode.distance+2, currentNode))
-                visited.add((i,j-1))
+                aStarMove(matrix,size,open,closed,currentNode,visited,i,j-1,2)
         except:
             {}
         # down operator
         try:
             if(matrix[i+1][j] != 'X' and i < size-1 and (i+1,j) not in visited):
-                n = [node for node in open if node.i == i+1 and node.j == j]
-                if(len(n) > 0):
-                    discardNode(closed, i+1, j)
-                open.add(Node(matrix[i+1][j], i+1, j, currentNode.distance+2, currentNode))
-                visited.add((i+1,j))
+                aStarMove(matrix,size,open,closed,currentNode,visited,i+1,j,2)
         except:
             {}
         # up operator
         try:
             if(matrix[i-1][j] != 'X' and i > 0 and (i-1,j) not in visited):
-                n = [node for node in open if node.i == i-1 and node.j == j]
-                if(len(n) > 0):
-                    discardNode(closed, i-1, j)
-                open.add(Node(matrix[i-1][j], i-1, j, currentNode.distance+2, currentNode))
-                visited.add((i-1,j))
+                aStarMove(matrix,size,open,closed,currentNode,visited,i-1,j,2)
         except:
             {}
         # move the current node from open to closed
         moveNode(open, closed, i, j)
-        visited.add((currentNode.i,currentNode.j))
     # end of while loop
     return closed, visited 
 
@@ -139,6 +117,6 @@ def main():
         for line in file:
             matrix.append(list(line.strip()))
         
-        gbfs(matrix,size)
+        aStar(matrix,size)
 
 main()
